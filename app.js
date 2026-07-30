@@ -25,6 +25,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
   window.__deferredPrompt = e;
   document.body.classList.add('pwa-installable');
   document.documentElement.classList.add('install-ready');
+  _installRetries = 6; // 已经捕获到了，下次点击直接弹
 });
 
 // 监听 appinstalled（补充）
@@ -63,6 +64,7 @@ document.addEventListener('click', function(e) {
 });
 
 // ====== 触发安装（直接安装，不弹窗） ======
+var _installRetries = 0;
 function triggerInstall() {
   if (deferredPrompt) {
     // 有浏览器安装支持 → 直接弹出浏览器原生安装对话框
@@ -73,7 +75,14 @@ function triggerInstall() {
     return true;
   }
 
-  // 无浏览器安装支持 → 显示底部小提示（非弹窗）
+  // deferredPrompt 还没捕获到 → 等一会重试（最多等 3 秒）
+  if (_installRetries < 6) {
+    _installRetries++;
+    setTimeout(triggerInstall, 500);
+    return false;
+  }
+
+  // 重试超时 → 无浏览器安装支持，显示底部小提示
   showInstallToast();
   return false;
 }
