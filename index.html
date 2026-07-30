@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>RICO777: Tu Mejor Destino de Casino Online</title>
+  <meta name="description" content="RICO777 Casino - Descarga la app y disfruta de los mejores juegos">
+  <meta name="theme-color" content="#121212">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <!-- 尽早捕获 beforeinstallprompt -->
+  <script>
+    window.__deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      window.__deferredPrompt = e;
+      document.documentElement.classList.add('install-ready');
+      console.log('[PWA] beforeinstallprompt captured');
+    });
+    window.addEventListener('appinstalled', function() {
+      window.__deferredPrompt = null;
+      document.documentElement.classList.add('app-installed');
+      console.log('[PWA] installed');
+    });
+  </script>
+</head>
+<body>
+
+  <!-- File Protocol Banner -->
+  <div class="file-protocol-banner" id="fileProtocolBanner">
+    ⚠️ 用 <code>file://</code> 打开时 PWA 安装不可用。
+    请运行 <code>python3 -m http.server 8080</code> 后访问 <b>http://localhost:8080</b>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- ====== HEADER ====== -->
+  <div class="header-top">
+    <div class="header-info">
+      <img src="img/logo.png" alt="Rico777" class="logo">
+      <span class="title-txt">Rico777</span>
+    </div>
+    <div class="share-group">
+      <div class="share-item" onclick="showShare()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </div>
+      <div class="share-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="share-item" onclick="showDownloadPopup()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== MAIN WRAPPER ====== -->
+  <div class="page-max-wrap">
+
+    <!-- ====== HERO / APP INFO ====== -->
+    <div class="home-bg">
+      <div class="home-feature-banner">
+        <div class="home-score-wrap">
+          <img src="img/app-icon.png" alt="RICO777" class="home-download" onerror="this.style.display='none'">
+          <div class="score-item">
+            <div class="info-title">RICO777</div>
+            <div class="info-subtitle">Grupo Rico777</div>
+            <div class="rating-wrapper">
+              <div class="rating-number">4.90 <span style="font-size:0.6em;color:#f4b400;">★</span></div>
+              <div class="people-item">8K+ reviews</div>
+            </div>
+            <div class="info-desc">128K+ downloads</div>
+            <div class="home-download-btn" onclick="triggerInstall()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              <div>
+                <div class="btn-title">Download</div>
+                <div class="btn-desc">18+</div>
+              </div>
+            </div>
+            <div class="install-hint">📲 可安装到桌面</div>
+            <div class="media-group">
+              <div class="media-group-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#028760"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Quick Installation
+              </div>
+              <div class="media-group-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#5f6368"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Download within 10 seconds
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== FEATURE SECTION ====== -->
+      <div class="home-feature-wrap">
+        <div class="feature-title">About this app</div>
+        <div class="feature-info">
+          True happiness *The hottest games of 2026* The ringtone of the reels, the lights on the screen, and the thrill of victory! It brings the sights and sounds of the gaming experience right to your home, letting your winnings soar to new heights! The more you spin, the more you win! Final winnings are not guaranteed.
+        </div>
+
+        <!-- Update Info -->
+        <div class="feature-update">
+          <div class="update-title">Updated on</div>
+          <div class="update-item">January 5, 2026</div>
+        </div>
+
+        <!-- Screenshots Gallery -->
+        <div class="feature-title" style="margin-top:20px;">Screenshots</div>
+        <div class="screenshot-scroll">
+          <div class="screenshot-scroll-inner">
+            <div class="screenshot-item">
+              <img src="img/display-1.png" alt="Screenshot 1" loading="lazy">
+            </div>
+            <div class="screenshot-item">
+              <img src="img/display-2.png" alt="Screenshot 2" loading="lazy">
+            </div>
+            <div class="screenshot-item">
+              <img src="img/display-3.png" alt="Screenshot 3" loading="lazy">
+            </div>
+            <div class="screenshot-item">
+              <img src="img/display-4.png" alt="Screenshot 4" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature Group -->
+        <div class="feature-title" style="margin-top:20px;">Data security</div>
+        <div class="feature-info" style="font-size:13px;color:#5f6368;">
+          Your security starts with understanding how developers collect and share your data. Data security and privacy practices may vary by use, region, and age.
+        </div>
+        <div class="feature-group">
+          <div class="feature-group-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            <div class="item-title">This app may share these types of data with third parties</div>
+          </div>
+          <div class="feature-group-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            <div class="item-title">Location, Financial Information, and Device Identifiers and Others</div>
+          </div>
+          <div class="feature-group-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            <div class="item-title">Data is not encrypted</div>
+          </div>
+          <div class="feature-group-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#5f6368"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            <div class="item-title">You can request the deletion of data</div>
+          </div>
+        </div>
+
+        <!-- ====== RATINGS ====== -->
+        <div class="feature-title" style="margin-top:24px;">Ratings and reviews</div>
+        <div class="rating-wrapper" style="margin-top:8px;">
+          <div class="number-item">4.9</div>
+          <div class="people-item" style="font-size:14px;">8,969 reviews</div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-item">
+            <span class="progress-num">5</span>
+            <div class="progress-value-wrap"><div class="progress-value" style="width:82%"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-num">4</span>
+            <div class="progress-value-wrap"><div class="progress-value" style="width:12%"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-num">3</span>
+            <div class="progress-value-wrap"><div class="progress-value" style="width:3%"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-num">2</span>
+            <div class="progress-value-wrap"><div class="progress-value" style="width:2%"></div></div>
+          </div>
+          <div class="progress-item">
+            <span class="progress-num">1</span>
+            <div class="progress-value-wrap"><div class="progress-value" style="width:1%"></div></div>
+          </div>
+        </div>
+
+        <!-- ====== REVIEWS ====== -->
+        <div class="feedback-wrap">
+          <div class="feedback-item">
+            <div class="user-wrap">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23e8eaed'/%3E%3Ccircle cx='18' cy='14' r='6' fill='%235f6368'/%3E%3Cpath d='M6 32c0-6 5.4-10 12-10s12 4 12 10' fill='%235f6368'/%3E%3C/svg%3E" alt="Miguel">
+              <div>
+                <div class="user-name">Miguel</div>
+                <div class="feedback-date">2/7/2025</div>
+              </div>
+            </div>
+            <div class="rating-wrap">
+              <span style="color:#f4b400;">★★★★★</span>
+            </div>
+            <div class="info-desc" style="font-size:14px;">Fun game with huge bonuses</div>
+          </div>
+          <div class="feedback-item">
+            <div class="user-wrap">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23e8eaed'/%3E%3Ccircle cx='18' cy='14' r='6' fill='%235f6368'/%3E%3Cpath d='M6 32c0-6 5.4-10 12-10s12 4 12 10' fill='%235f6368'/%3E%3C/svg%3E" alt="Greg">
+              <div>
+                <div class="user-name">Greg Blake</div>
+                <div class="feedback-date">1/5/2025</div>
+              </div>
+            </div>
+            <div class="rating-wrap">
+              <span style="color:#f4b400;">★★★★★</span>
+            </div>
+            <div class="info-desc" style="font-size:14px;">Very fun casual game, you can also earn money</div>
+          </div>
+        </div>
+
+        <!-- ====== OTHER APPS ====== -->
+        <div class="group-wrap">
+          <div class="group-title">Play Pass</div>
+          <div class="other-wrap">
+            <div class="other-item">Play Points</div>
+            <div class="other-item">Present Vouchers</div>
+            <div class="other-item">Rescue</div>
+            <div class="other-item">Refund Policy</div>
+            <div class="other-item">Children and family</div>
+            <div class="other-item">Family Guide</div>
+            <div class="other-item">Family Sharing</div>
+          </div>
+        </div>
+
+        <!-- ====== HELP ====== -->
+        <div class="help-wrap">
+          <div class="group-title">Help & Support</div>
+          <div class="other-wrap">
+            <div class="other-item">Terms of Service</div>
+            <div class="other-item">Privacy</div>
+            <div class="other-item">About</div>
+            <div class="other-item">Developers</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding:20px 0;font-size:12px;color:#5f6368;">
+          All prices include Tax
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== DOWNLOAD POPUP ====== -->
+  <div class="popup-wrapper" id="downloadPopup" style="display:none;" onclick="closePopup(event)">
+    <div class="popup-wrap" onclick="event.stopPropagation()">
+      <div class="popup-title">
+        <img src="img/app-icon.png" alt="RICO777" onerror="this.style.display='none'">
+        <span>RICO777</span>
+      </div>
+      <div class="popup-subtitle">Rated for 18+</div>
+      <div class="popup-info">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23028760'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E" alt="">
+        <span>Verified by Play Protect</span>
+      </div>
+      <div class="loading-btn on" id="downloadBtn" onclick="startDownload()">
+        <span class="btn-text">Install</span>
+      </div>
+      <div style="text-align:center;margin-top:10px;font-size:12px;color:#5f6368;" onclick="closePopup()">Cancel</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
