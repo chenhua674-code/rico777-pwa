@@ -6,11 +6,7 @@ var isStandalone = window.matchMedia('(display-mode: standalone)').matches || wi
 
 // ====== 注册 Service Worker ======
 if ('serviceWorker' in navigator && !isFileProtocol) {
-  navigator.serviceWorker.register('/rico777-pwa/sw.js').then(function(reg) {
-    console.log('SW registered:', reg.scope);
-  }).catch(function(err) {
-    console.warn('SW registration failed:', err);
-  });
+  navigator.serviceWorker.register('/rico777-pwa/sw.js');
 }
 
 // ====== PWA 安装到桌面 ======
@@ -61,7 +57,6 @@ document.addEventListener('click', function(e) {
 
 // ====== 触发安装 ======
 function triggerInstall() {
-  // 有 deferredPrompt → 直接弹浏览器安装对话框
   if (deferredPrompt) {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function(choiceResult) {
@@ -70,61 +65,56 @@ function triggerInstall() {
     return true;
   }
 
-  // 无 deferredPrompt → 显示桌面版安装引导
-  showDesktopInstallGuide();
+  // 无浏览器安装支持 → 直接显示安装引导
+  showInstallGuide();
   return false;
 }
 
-// ====== 桌面版安装引导（指向地址栏图标） ======
-function showDesktopInstallGuide() {
-  var existing = document.getElementById('installGuideDesktop');
+// ====== 安装引导 ======
+function showInstallGuide() {
+  var existing = document.getElementById('installGuide');
   if (existing) return;
 
-  var isMac = navigator.userAgent.indexOf('Mac OS X') !== -1;
-  var isWin = navigator.userAgent.indexOf('Windows') !== -1;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   var isAndroid = /Android/.test(navigator.userAgent);
 
   var guideHtml = '';
-  if (isAndroid) {
-    guideHtml = 'Chrome 地址栏 → 点安装图标 📲';
+  if (isFileProtocol) {
+    guideHtml = '请用本地服务器打开<br><code>python3 -m http.server 8080</code>';
+  } else if (isIOS) {
+    guideHtml = '点底部 <b>分享</b> 按钮 →<br>向下滑选 <b>添加到主屏幕</b>';
+  } else if (isAndroid) {
+    guideHtml = '点浏览器右上角 <b>⋮</b> →<br>选 <b>安装应用</b>';
   } else {
-    // 桌面 Chrome
-    guideHtml = '地址栏右侧点击 <b>安装</b> 图标 ' + (isMac ? '🔲' : '') + ' → 安装';
+    guideHtml = '点地址栏右侧 <b>安装</b> 图标';
   }
 
   var el = document.createElement('div');
-  el.id = 'installGuideDesktop';
-  el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:16px 28px;border-radius:14px;font-size:15px;z-index:99999;box-shadow:0 6px 30px rgba(0,0,0,0.35);animation:toastIn 0.3s ease;text-align:center;line-height:1.6;max-width:360px;';
-  el.innerHTML = '📲 ' + guideHtml + '<br><span style="font-size:12px;opacity:0.7;display:block;margin-top:6px;">点击此提示关闭</span>';
-
-  el.onclick = function() {
-    el.style.transition = 'opacity 0.3s ease';
-    el.style.opacity = '0';
-    setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-  };
+  el.id = 'installGuide';
+  el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:16px 28px;border-radius:14px;font-size:15px;z-index:99999;box-shadow:0 6px 30px rgba(0,0,0,0.35);animation:guideIn 0.3s ease;text-align:center;line-height:1.7;max-width:340px;';
+  el.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">📲</div>' + guideHtml + '<br><span style="font-size:11px;opacity:0.5;display:block;margin-top:8px;">点击关闭</span>';
+  el.onclick = function() { hideGuide(el); };
 
   document.body.appendChild(el);
-
-  // 自动关闭
-  setTimeout(function() {
-    if (el.parentNode) {
-      el.style.transition = 'opacity 0.3s ease';
-      el.style.opacity = '0';
-      setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-    }
-  }, 6000);
+  setTimeout(function() { hideGuide(el); }, 6000);
 }
 
-// ====== Toast 动画 ======
-var toastStyle = document.createElement('style');
-toastStyle.textContent = '@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }';
-document.head.appendChild(toastStyle);
+function hideGuide(el) {
+  if (!el || !el.parentNode) return;
+  el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  el.style.opacity = '0';
+  el.style.transform = 'translateX(-50%) translateY(20px)';
+  setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+}
 
-// ====== 手动安装引导 ======
+// ====== 动画 ======
+var animStyle = document.createElement('style');
+animStyle.textContent = '@keyframes guideIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }';
+document.head.appendChild(animStyle);
+
+// ====== 手动安装引导（保留给弹窗内使用） ======
 function getManualGuideHTML() {
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
   var steps = '';
   if (isFileProtocol) {
     steps = '<div style="background:#fff3cd;padding:10px 14px;border-radius:8px;font-size:13px;color:#856404;text-align:left;">' +
@@ -132,12 +122,10 @@ function getManualGuideHTML() {
       '请用终端启动本地服务器：<br>' +
       '<code style="background:#f0f0f0;padding:3px 8px;border-radius:4px;display:block;margin-top:6px;font-size:12px;">cd rico777-pwa && python3 -m http.server 8080</code><br>' +
       '然后浏览器访问 <b>http://localhost:8080</b></div>';
-  } else if (isIOS || isSafari) {
+  } else if (isIOS) {
     steps = '1. 点击底部「分享」按钮 📤<br>' +
             '2. 向下滑动选择「添加到主屏幕」🏠<br>' +
             '3. 点击右上角「添加」✅';
-  } else if (deferredPrompt) {
-    steps = '点击下方「安装」按钮，在浏览器弹窗中确认即可 ✅';
   } else {
     steps = 'Chrome: 地址栏右侧 ⋮ → 「安装应用」<br>' +
             'Edge: 地址栏右侧 ⋯ → 「应用」→「安装」';
@@ -160,7 +148,6 @@ function showManualGuide() {
 function showDownloadPopup() {
   var popup = document.getElementById('downloadPopup');
   if (!popup) return;
-
   var wrap = popup.querySelector('.popup-wrap');
   if (wrap) {
     wrap.innerHTML = '<div class="popup-title">' +
@@ -175,7 +162,6 @@ function showDownloadPopup() {
       '<div style="text-align:center;margin-top:10px;font-size:12px;color:#5f6368;cursor:pointer;" onclick="showManualGuide()">📲 安装到桌面</div>' +
       '<div style="text-align:center;margin-top:6px;font-size:12px;color:#999;cursor:pointer;" onclick="closePopup()">Cancel</div>';
   }
-
   popup.style.display = 'flex';
 }
 
@@ -191,9 +177,7 @@ function closePopup(e) {
 function startDownload() {
   if (deferredPrompt) {
     var btn = document.getElementById('downloadBtn');
-    if (btn) {
-      btn.innerHTML = '<div class="btn-spinner"></div><span class="btn-text" style="display:block;">Installing...</span>';
-    }
+    if (btn) btn.innerHTML = '<div class="btn-spinner"></div><span class="btn-text" style="display:block;">Installing...</span>';
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function(choiceResult) {
       deferredPrompt = null;
@@ -206,7 +190,6 @@ function startDownload() {
     });
     return;
   }
-
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIOS) {
     window.location.href = 'https://apps.apple.com/app/rico777/id123456789';
@@ -216,11 +199,7 @@ function startDownload() {
 }
 
 function shareRICO777() {
-  var shareData = {
-    title: 'RICO777',
-    text: 'Check out RICO777 - your ultimate app!',
-    url: window.location.href
-  };
+  var shareData = { title: 'RICO777', text: 'Check out RICO777 - your ultimate app!', url: window.location.href };
   if (navigator.share) {
     navigator.share(shareData);
   } else {
@@ -257,12 +236,9 @@ function hideLoadingOverlay() {
   if (overlay) {
     overlay.style.opacity = '0';
     overlay.style.transition = 'opacity 0.3s ease';
-    setTimeout(function() {
-      overlay.style.display = 'none';
-    }, 300);
+    setTimeout(function() { overlay.style.display = 'none'; }, 300);
   }
 }
-
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   hideLoadingOverlay();
 } else {
