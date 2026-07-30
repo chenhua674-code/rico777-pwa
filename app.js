@@ -82,7 +82,7 @@ function triggerInstall() {
 
   // 轮询等待 deferredPrompt（最长 10 秒）
   var retries = 0;
-  var maxRetries = 20;
+  var maxRetries = 60;
   _installTimer = setInterval(function() {
     retries++;
     if (deferredPrompt) {

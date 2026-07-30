@@ -26,6 +26,40 @@
   </script>
 </head>
 <body>
+  <!-- ====== PWA 诊断条（临时） ====== -->
+  <div id="pwaDebug" style="position:fixed;top:0;left:0;width:100%;background:#000;color:#0f0;font-size:12px;padding:6px 12px;z-index:999999;font-family:monospace;display:flex;gap:12px;flex-wrap:wrap;">
+    <span id="debugProtocol">🌐 ...</span>
+    <span id="debugSW">⚙️ SW: ...</span>
+    <span id="debugBIP">📲 BIP: ...</span>
+    <span id="debugUA" style="color:#888;font-size:10px;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">...</span>
+  </div>
+  <script>
+    document.getElementById('debugProtocol').textContent = '🌐 ' + window.location.protocol;
+    document.getElementById('debugUA').textContent = navigator.userAgent.substring(0, 80);
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(function(reg) {
+        document.getElementById('debugSW').textContent = '⚙️ SW: ✅ ' + reg.scope.substring(0, 40);
+      }).catch(function() {
+        document.getElementById('debugSW').textContent = '⚙️ SW: ❌';
+      });
+    } else {
+      document.getElementById('debugSW').textContent = '⚙️ SW: ❌ not supported';
+    }
+    // 轮询检查 beforeinstallprompt
+    setInterval(function() {
+      var el = document.getElementById('debugBIP');
+      if (window.__deferredPrompt) {
+        el.textContent = '📲 BIP: ✅ captured';
+        el.style.color = '#0f0';
+      } else if (document.documentElement.classList.contains('install-ready')) {
+        el.textContent = '📲 BIP: ✅ ready class';
+        el.style.color = '#0f0';
+      } else {
+        el.textContent = '📲 BIP: ⏳ waiting...';
+        el.style.color = '#ff0';
+      }
+    }, 1000);
+  </script>
 
   <!-- File Protocol Banner -->
   <div class="file-protocol-banner" id="fileProtocolBanner">

@@ -23,6 +23,7 @@ body {
   display: flex;
   justify-content: center;
   cursor: pointer;
+  padding-top: 32px;
 }
 
 /* 手机容器 — 模拟手机宽度，居中显示 */
