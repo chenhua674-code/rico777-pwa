@@ -6,7 +6,7 @@ var isStandalone = window.matchMedia('(display-mode: standalone)').matches || wi
 
 // ====== 注册 Service Worker（PWA 安装必要条件） ======
 if ('serviceWorker' in navigator && !isFileProtocol) {
-  navigator.serviceWorker.register('sw.js').then(function(reg) {
+  navigator.serviceWorker.register('/rico777-pwa/sw.js').then(function(reg) {
     console.log('SW registered:', reg.scope);
   }).catch(function(err) {
     console.warn('SW registration failed:', err);

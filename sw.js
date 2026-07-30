@@ -2,13 +2,13 @@
 const CACHE_NAME = 'rico777-store-v1';
 
 const PRECACHE_URLS = [
-  '/',
-  'style.css',
-  'manifest.json',
-  'img/logo.png',
-  'img/app-icon.png',
-  'img/icon-192.png',
-  'img/icon-512.png'
+  '/rico777-pwa/',
+  '/rico777-pwa/style.css',
+  '/rico777-pwa/manifest.json',
+  '/rico777-pwa/img/logo.png',
+  '/rico777-pwa/img/app-icon.png',
+  '/rico777-pwa/img/icon-192.png',
+  '/rico777-pwa/img/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
