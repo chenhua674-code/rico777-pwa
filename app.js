@@ -6,7 +6,7 @@ var isStandalone = window.matchMedia('(display-mode: standalone)').matches || wi
 
 // ====== 注册 Service Worker ======
 if ('serviceWorker' in navigator && !isFileProtocol) {
-  navigator.serviceWorker.register('/rico777-pwa/sw.js');
+  navigator.serviceWorker.register('sw.js');
 }
 
 // ====== PWA 安装到桌面 ======
@@ -239,11 +239,20 @@ function hideLoadingOverlay() {
     setTimeout(function() { overlay.style.display = 'none'; }, 300);
   }
 }
+function autoShowPopup() {
+  if (isInstalled) return;
+  setTimeout(function() {
+    showDownloadPopup();
+  }, 800);
+}
+
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   hideLoadingOverlay();
+  autoShowPopup();
 } else {
   document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('page-loaded');
     hideLoadingOverlay();
+    autoShowPopup();
   });
 }
