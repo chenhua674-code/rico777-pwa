@@ -25,7 +25,6 @@ window.addEventListener('beforeinstallprompt', function(e) {
   window.__deferredPrompt = e;
   document.body.classList.add('pwa-installable');
   document.documentElement.classList.add('install-ready');
-  _installRetries = 6; // 已经捕获到了，下次点击直接弹
 });
 
 // 监听 appinstalled（补充）
@@ -64,10 +63,10 @@ document.addEventListener('click', function(e) {
 });
 
 // ====== 触发安装（直接安装，不弹窗） ======
-var _installRetries = 0;
+var _installTimer = null;
 function triggerInstall() {
+  // 如果已有 deferredPrompt，直接弹
   if (deferredPrompt) {
-    // 有浏览器安装支持 → 直接弹出浏览器原生安装对话框
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function(choiceResult) {
       deferredPrompt = null;
@@ -75,16 +74,55 @@ function triggerInstall() {
     return true;
   }
 
-  // deferredPrompt 还没捕获到 → 等一会重试（最多等 3 秒）
-  if (_installRetries < 6) {
-    _installRetries++;
-    setTimeout(triggerInstall, 500);
-    return false;
-  }
+  // 防止重复启动等待
+  if (_installTimer) return false;
 
-  // 重试超时 → 无浏览器安装支持，显示底部小提示
-  showInstallToast();
+  // 显示"准备安装中…"状态
+  showInstallWaiting();
+
+  // 轮询等待 deferredPrompt（最长 10 秒）
+  var retries = 0;
+  var maxRetries = 20;
+  _installTimer = setInterval(function() {
+    retries++;
+    if (deferredPrompt) {
+      clearInterval(_installTimer);
+      _installTimer = null;
+      hideInstallWaiting();
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choiceResult) {
+        deferredPrompt = null;
+      });
+      return;
+    }
+    if (retries >= maxRetries) {
+      clearInterval(_installTimer);
+      _installTimer = null;
+      hideInstallWaiting();
+      showInstallToast();
+    }
+  }, 500);
+
   return false;
+}
+
+// ====== 安装等待指示器 ======
+function showInstallWaiting() {
+  var existing = document.getElementById('installWaiting');
+  if (existing) return;
+  var el = document.createElement('div');
+  el.id = 'installWaiting';
+  el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#01875f;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:99999;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:toastIn 0.3s ease;';
+  el.innerHTML = '<div class="waiting-spinner"></div><span>准备安装...</span>';
+  document.body.appendChild(el);
+}
+function hideInstallWaiting() {
+  var el = document.getElementById('installWaiting');
+  if (el) {
+    el.style.transition = 'opacity 0.3s ease';
+    el.style.opacity = '0';
+    setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+  }
 }
 
 // ====== 非阻塞式安装提示（底部小提示，不弹窗） ======
@@ -134,7 +172,7 @@ function hideToast(toast) {
 
 // ====== Toast 动画 ======
 var toastStyle = document.createElement('style');
-toastStyle.textContent = '@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }';
+toastStyle.textContent = '@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } } @keyframes waitSpin { to { transform:rotate(360deg); } } .waiting-spinner { width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:waitSpin 0.8s linear infinite; }';
 document.head.appendChild(toastStyle);
 
 // ====== 手动安装引导（保留给下载按钮备用） ======
