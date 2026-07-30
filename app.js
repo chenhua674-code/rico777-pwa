@@ -158,9 +158,7 @@ function showDownloadPopup() {
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="#028760"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' +
       '<span>Verified by Play Protect</span></div>' +
       '<div class="loading-btn on" id="downloadBtn" onclick="startDownload()">' +
-      '<span class="btn-text">Install</span></div>' +
-      '<div style="text-align:center;margin-top:10px;font-size:12px;color:#5f6368;cursor:pointer;" onclick="showManualGuide()">📲 安装到桌面</div>' +
-      '<div style="text-align:center;margin-top:6px;font-size:12px;color:#999;cursor:pointer;" onclick="closePopup()">Cancel</div>';
+      '<span class="btn-text">Install</span></div>';
   }
   popup.style.display = 'flex';
 }
