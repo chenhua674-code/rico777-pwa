@@ -188,12 +188,25 @@ function startDownload() {
     });
     return;
   }
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS) {
-    window.location.href = 'https://apps.apple.com/app/rico777/id123456789';
-  } else {
-    window.location.href = 'https://www.rico777.com/download';
-  }
+  // 无 BIP → 弹框内显示安装引导，不跳转
+  showInstallGuideInPopup();
+}
+
+function showInstallGuideInPopup() {
+  var popup = document.getElementById('downloadPopup');
+  if (!popup) return;
+  var wrap = popup.querySelector('.popup-wrap');
+  if (!wrap) return;
+  var isAndroid = /Android/.test(navigator.userAgent);
+  var steps = isAndroid
+    ? '1. 点浏览器右上角 <b>⋮</b><br>2. 选 <b>安装应用</b>'
+    : '1. 点地址栏右侧 <b>安装</b> 图标<br>2. 点击 <b>安装</b>';
+  wrap.innerHTML =
+    '<div style="text-align:center;padding:20px 10px;">' +
+    '<div style="font-size:40px;margin-bottom:10px;">📲</div>' +
+    '<div style="font-size:16px;font-weight:600;margin-bottom:12px;">手动安装步骤</div>' +
+    '<div style="font-size:14px;color:#3c4043;line-height:1.8;text-align:left;padding:0 10px;">' + steps + '</div>' +
+    '</div>';
 }
 
 function shareRICO777() {
