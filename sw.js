@@ -1,5 +1,5 @@
 // RICO777 PWA - Service Worker v1.0
-const CACHE_NAME = 'rico777-store-v1';
+const CACHE_NAME = 'rico777-store-v2';
 
 const PRECACHE_URLS = [
   './',
