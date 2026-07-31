@@ -30,8 +30,8 @@ window.addEventListener('appinstalled', function() {
   document.documentElement.classList.add('app-installed');
 });
 
-// ====== 华为浏览器检测 ======
-var isHuawei = /HuaweiBrowser|HUAWEI|Honor/i.test(navigator.userAgent) && /Android/i.test(navigator.userAgent);
+// ====== 华为浏览器检测（仅匹配华为自带浏览器，不误伤 Chrome） ======
+var isHuawei = /HuaweiBrowser/i.test(navigator.userAgent);
 
 // ====== 安装跳转链接 ======
 var INSTALL_URL = 'https://www.rico777.com/?tid=4977&affiliateCode=fb22011&fbPixelId=1583180666714921';
@@ -220,17 +220,17 @@ setTimeout(function() {
   if (popup && (popup.style.display === 'none' || popup.style.display === '')) {
     showDownloadPopup();
   }
-  // 无BIP → 华为跳转H5，其他手机按钮改引导
+  // 无BIP → 华为跳转H5，其他手机直接弹出安装引导
   if (!deferredPrompt) {
-    var btn = document.getElementById('downloadBtn');
-    if (btn) {
-      if (isHuawei) {
+    if (isHuawei) {
+      var btn = document.getElementById('downloadBtn');
+      if (btn) {
         btn.innerHTML = '<span class="btn-text">去官网安装</span>';
         btn.onclick = function() { redirectToInstall(); };
-      } else {
-        btn.innerHTML = '<span class="btn-text">安装不可用 · 点此查看方法</span>';
-        btn.onclick = function() { showInstallGuideInPopup(); };
       }
+    } else {
+      // 非华为：弹框直接替换为安装引导
+      showInstallGuideInPopup();
     }
   }
 }, 1500);
