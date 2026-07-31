@@ -76,12 +76,8 @@ function triggerInstall() {
     return true;
   }
 
-  // 华为 → 跳转 H5；其他手机 → 显示安装引导
-  if (isHuawei) {
-    redirectToInstall();
-  } else {
-    showInstallGuideInPopup();
-  }
+  // 无 BIP → 直接跳转 H5
+  redirectToInstall();
   return false;
 }
 
@@ -124,34 +120,11 @@ function startDownload() {
     });
     return;
   }
-  // 华为 → 跳转 H5；其他手机 → 显示安装引导
-  if (isHuawei) {
-    redirectToInstall();
-  } else {
-    showInstallGuideInPopup();
-  }
+  // 无 BIP → 直接跳转 H5
+  redirectToInstall();
 }
 
-// ====== 安装引导弹框 ======
-function showInstallGuideInPopup() {
-  var popup = document.getElementById('downloadPopup');
-  if (!popup) return;
-  var wrap = popup.querySelector('.popup-wrap');
-  if (!wrap) return;
-  var isAndroid = /Android/.test(navigator.userAgent);
-  var steps = isAndroid
-    ? '1. 点浏览器右上角 <b>⋮</b> 菜单<br>2. 选 <b>安装应用</b> 或 <b>添加到主屏幕</b>'
-    : '1. 点地址栏右侧 <b>安装</b> 图标<br>2. 点击 <b>安装</b>';
-  wrap.innerHTML =
-    '<div style="text-align:center;padding:20px 10px;">' +
-    '<div style="font-size:40px;margin-bottom:10px;">📲</div>' +
-    '<div style="font-size:16px;font-weight:600;margin-bottom:12px;">手动安装步骤</div>' +
-    '<div style="font-size:14px;color:#3c4043;line-height:1.8;text-align:left;padding:0 10px;">' + steps + '</div>' +
-    '<div class="loading-btn on" onclick="closePopup()" style="background:#5f6368;margin-top:14px;">' +
-    '<span class="btn-text" style="font-size:14px;">知道了</span></div>' +
-    '</div>';
-}
-
+// ====== 弹出框点击绑定 (使用 touchstart 提升移动端兼容性) ======
 function showDownloadPopup() {
   var popup = document.getElementById('downloadPopup');
   if (!popup) return;
@@ -220,18 +193,9 @@ setTimeout(function() {
   if (popup && (popup.style.display === 'none' || popup.style.display === '')) {
     showDownloadPopup();
   }
-  // 无BIP → 华为跳转H5，其他手机直接弹出安装引导
+  // 无BIP → 直接跳转 H5
   if (!deferredPrompt) {
-    if (isHuawei) {
-      var btn = document.getElementById('downloadBtn');
-      if (btn) {
-        btn.innerHTML = '<span class="btn-text">去官网安装</span>';
-        btn.onclick = function() { redirectToInstall(); };
-      }
-    } else {
-      // 非华为：弹框直接替换为安装引导
-      showInstallGuideInPopup();
-    }
+    redirectToInstall();
   }
 }, 1500);
 
