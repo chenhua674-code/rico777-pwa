@@ -211,11 +211,24 @@ setTimeout(function() {
   if (popup && (popup.style.display === 'none' || popup.style.display === '')) {
     showDownloadPopup();
   }
-  // 无BIP → 直接跳转 H5
-  if (!deferredPrompt) {
-    redirectToInstall();
-  }
+  // 8秒后仍无BIP → 提示用户点Install按钮安装或跳转
+  // 不自动跳转，等用户主动点击
 }, 1500);
+
+// 8秒后BIP还没触发 → 弹框内显示提示
+setTimeout(function() {
+  if (isInstalled || deferredPrompt) return;
+  var popup = document.getElementById('downloadPopup');
+  if (!popup) return;
+  var wrap = popup.querySelector('.popup-wrap');
+  if (!wrap) return;
+  // 只改按钮文字为"去官网安装"
+  var btn = document.getElementById('downloadBtn');
+  if (btn) {
+    btn.innerHTML = '<span class="btn-text">去官网安装</span>';
+    btn.onclick = function() { redirectToInstall(); };
+  }
+}, 8000);
 
 // ====== 页面加载完成后标记 ======
 function hideLoadingOverlay() {
