@@ -15,18 +15,23 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #fff;
+  background: #e8eaed;
   color: #202124;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  display: flex;
+  justify-content: center;
 }
 
-/* 手机全屏容器 */
+/* 手机容器 — 模拟手机屏幕宽度，桌面居中显示 */
 .page-max-wrap {
   width: 100%;
+  max-width: 414px;
   min-height: 100vh;
   background: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+  margin: 0 auto;
 }
 
 img {
