@@ -28,6 +28,8 @@ window.addEventListener('appinstalled', function() {
   document.body.classList.add('pwa-installed');
   document.body.classList.remove('pwa-installable');
   document.documentElement.classList.add('app-installed');
+  // 安装成功后弹框提示
+  showInstallSuccess();
 });
 
 // ====== 华为浏览器检测（仅匹配华为自带浏览器，不误伤 Chrome） ======
@@ -81,6 +83,21 @@ function triggerInstall() {
   return false;
 }
 
+// ====== 安装成功提示 ======
+function showInstallSuccess() {
+  var popup = document.getElementById('downloadPopup');
+  if (!popup) return;
+  var wrap = popup.querySelector('.popup-wrap');
+  if (!wrap) return;
+  wrap.innerHTML =
+    '<div style="text-align:center;padding:30px 20px;">' +
+    '<div style="font-size:48px;margin-bottom:10px;">✅</div>' +
+    '<div style="font-size:16px;font-weight:600;color:#028760;margin-bottom:8px;">安装成功！</div>' +
+    '<div style="font-size:14px;color:#3c4043;line-height:1.6;">RICO777 已安装到您的设备<br>请回到桌面打开应用 🎉</div>' +
+    '</div>';
+  popup.style.display = 'flex';
+}
+
 // ====== 弹出框点击绑定 (使用 touchstart 提升移动端兼容性) ======
 document.addEventListener('touchstart', function(e) {
   var target = e.target;
@@ -112,7 +129,8 @@ function startDownload() {
     deferredPrompt.userChoice.then(function(choiceResult) {
       deferredPrompt = null;
       if (choiceResult.outcome === 'accepted') {
-        closePopup();
+        // appinstalled 事件会触发 showInstallSuccess()
+        // 这里保持 spinner 状态即可
       } else {
         var btn2 = document.getElementById('downloadBtn');
         if (btn2) btn2.innerHTML = '<span class="btn-text">Install</span>';
@@ -210,9 +228,25 @@ function hideLoadingOverlay() {
 }
 function autoShowPopup() {
   if (isInstalled) return;
-  setTimeout(function() {
-    showDownloadPopup();
-  }, 500);
+
+  function showPopupWhenVisible() {
+    if (document.visibilityState === 'visible') {
+      setTimeout(function() {
+        showDownloadPopup();
+      }, 500);
+    } else {
+      document.addEventListener('visibilitychange', function onVisible() {
+        if (document.visibilityState === 'visible') {
+          document.removeEventListener('visibilitychange', onVisible);
+          setTimeout(function() {
+            showDownloadPopup();
+          }, 500);
+        }
+      });
+    }
+  }
+
+  showPopupWhenVisible();
 }
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
