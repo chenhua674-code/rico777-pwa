@@ -34,7 +34,8 @@ window.addEventListener('appinstalled', function() {
 var INSTALL_URL = 'https://www.rico777.com/?tid=4977&affiliateCode=fb22011&fbPixelId=1583180666714921';
 
 function redirectToInstall() {
-  window.location.href = INSTALL_URL;
+  // 使用 replace 避免浏览器拦截 location.href 跳转
+  document.location.replace(INSTALL_URL);
 }
 
 // ====== 全局点击 → 安装 ======
@@ -76,6 +77,28 @@ function triggerInstall() {
   redirectToInstall();
   return false;
 }
+
+// ====== 弹出框点击绑定 (使用 touchstart 提升移动端兼容性) ======
+document.addEventListener('touchstart', function(e) {
+  var target = e.target;
+  if (!target) return;
+  // 检查是否点击了下载按钮
+  var btn = target.closest ? target.closest('#downloadBtn, .home-download-btn') : null;
+  if (!btn) {
+    // 向上遍历查找
+    var el = target;
+    for (var i = 0; i < 5; i++) {
+      if (!el || el === document.body || el === document.documentElement) break;
+      if (el.id === 'downloadBtn') { btn = el; break; }
+      if (el.classList && el.classList.contains('home-download-btn')) { btn = el; break; }
+      el = el.parentElement;
+    }
+  }
+  if (btn) {
+    e.preventDefault();
+    startDownload();
+  }
+});
 
 // ====== 下载/安装按钮 ======
 function startDownload() {

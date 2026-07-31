@@ -22,7 +22,6 @@ body {
   overflow-x: hidden;
   display: flex;
   justify-content: center;
-  cursor: pointer;
 }
 
 /* 手机容器 — 模拟手机宽度，居中显示 */
