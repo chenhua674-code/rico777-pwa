@@ -15,23 +15,18 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #e8eaed;
+  background: #fff;
   color: #202124;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  display: flex;
-  justify-content: center;
 }
 
-/* 手机容器 — 模拟手机宽度，居中显示 */
+/* 手机全屏容器 */
 .page-max-wrap {
   width: 100%;
-  max-width: 480px;
   min-height: 100vh;
   background: #fff;
-  box-shadow: 0 0 20px rgba(0,0,0,0.08);
-  margin: 0 auto;
 }
 
 img {
@@ -118,12 +113,6 @@ img {
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 11px;
-}
-
-/* ====== Page Max Wrap ====== */
-.page-max-wrap {
-  max-width: 100%;
-  margin: 0;
 }
 
 /* ====== Hero ====== */
