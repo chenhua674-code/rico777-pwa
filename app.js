@@ -199,7 +199,7 @@ function showInstallGuideInPopup() {
   if (!wrap) return;
   var isAndroid = /Android/.test(navigator.userAgent);
   var steps = isAndroid
-    ? '1. 点浏览器右上角 <b>⋮</b><br>2. 选 <b>安装应用</b>'
+    ? '1. 点浏览器右上角 <b>⋮</b> 菜单<br>2. 选 <b>安装应用</b> 或 <b>添加到主屏幕</b><br><br>📌 <span style="font-size:13px;color:#5f6368;">如果找不到，试试用 <b>Chrome浏览器</b> 打开</span>'
     : '1. 点地址栏右侧 <b>安装</b> 图标<br>2. 点击 <b>安装</b>';
   wrap.innerHTML =
     '<div style="text-align:center;padding:20px 10px;">' +
@@ -241,6 +241,22 @@ if (isFileProtocol) {
   document.body.prepend(banner);
 }
 
+// ====== 非Chrome浏览器兼容：BIP未触发时的兜底 ======
+var isBipSupported = typeof window.__deferredPrompt !== 'undefined' && 'BeforeInstallPromptEvent' in window;
+// 更准确地检测：如果3秒后deferredPrompt仍为null，判定为不支持BIP
+setTimeout(function() {
+  if (isInstalled) return;
+  var popup = document.getElementById('downloadPopup');
+  // 确保弹框显示
+  if (popup && (popup.style.display === 'none' || popup.style.display === '')) {
+    showDownloadPopup();
+  }
+  // 无BIP → 弹框内直接显示安装引导（不显示Install按钮）
+  if (!deferredPrompt) {
+    showInstallGuideInPopup();
+  }
+}, 1500);
+
 // ====== 页面加载完成后标记 ======
 function hideLoadingOverlay() {
   var overlay = document.getElementById('loadingOverlay');
@@ -254,7 +270,7 @@ function autoShowPopup() {
   if (isInstalled) return;
   setTimeout(function() {
     showDownloadPopup();
-  }, 800);
+  }, 500);
 }
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
