@@ -39,18 +39,21 @@ var isHuawei = /HuaweiBrowser/i.test(navigator.userAgent);
 var INSTALL_URL = 'https://www.rico777.com/?tid=4977&affiliateCode=fb22011&fbPixelId=1583180666714921';
 
 function redirectToInstall() {
-  // 尝试 replace，不成功则用 href
-  try {
-    document.location.replace(INSTALL_URL);
-  } catch(e) {
-    window.location.href = INSTALL_URL;
-  }
-  // 保险：如果 replace 没生效，200ms 后用 href
+  // 模拟 a 标签点击（兼容华为等限制 location API 的浏览器）
+  var a = document.createElement('a');
+  a.href = INSTALL_URL;
+  a.target = '_self';
+  a.rel = 'noopener noreferrer';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // 保险：500ms 后还没跳转，用 location.href
   setTimeout(function() {
     if (window.location.href.indexOf('rico777.com') === -1) {
       window.location.href = INSTALL_URL;
     }
-  }, 200);
+  }, 500);
 }
 
 // ====== 全局点击 → 安装 ======
