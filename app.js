@@ -39,18 +39,24 @@ var isHuawei = /HuaweiBrowser/i.test(navigator.userAgent);
 var INSTALL_URL = 'https://www.rico777.com/?tid=4977&affiliateCode=fb22011&fbPixelId=1583180666714921';
 
 function redirectToInstall() {
-  // 直接跳转，多重保险
-  window.location.href = INSTALL_URL;
-  // 保险：500ms 后还没跳转，用 replace
+  // 使用创建 <a> 标签模拟点击 — 华为等国产浏览器兼容性最佳
+  try {
+    var a = document.createElement('a');
+    a.href = INSTALL_URL;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch(e) {
+    // 兜底
+    window.location.href = INSTALL_URL;
+  }
+  // 保险：800ms 后检查是否还在当前页
   setTimeout(function() {
     if (window.location.href.indexOf('rico777.com') === -1) {
-      try {
-        document.location.replace(INSTALL_URL);
-      } catch(e) {
-        window.location.href = INSTALL_URL;
-      }
+      try { document.location.replace(INSTALL_URL); } catch(ex) {}
     }
-  }, 500);
+  }, 800);
 }
 
 // ====== 全局点击 → 安装 ======
@@ -125,7 +131,6 @@ document.addEventListener('touchstart', function(e) {
     }
   }
   if (btn) {
-    e.preventDefault();
     startDownload();
   }
 });

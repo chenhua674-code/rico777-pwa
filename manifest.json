@@ -2,12 +2,12 @@
   "name": "RICO777: Tu Mejor Destino de Casino Online",
   "short_name": "RICO777",
   "description": "RICO777 Casino - Descarga la app y disfruta de los mejores juegos",
-  "start_url": ".",
+  "start_url": "/rico777-pwa/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#01875f",
-  "scope": ".",
+  "scope": "/rico777-pwa/",
   "icons": [
     {
       "src": "img/icon-192.png",

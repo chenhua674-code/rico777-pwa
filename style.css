@@ -92,15 +92,16 @@ img {
   color: #202124;
 }
 .version-tag {
-  font-size: 11px;
+  font-size: 13px;
   color: #fff;
-  background: #5f6368;
-  padding: 2px 8px;
-  border-radius: 10px;
-  margin-left: 6px;
+  background: #1a73e8;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-left: 8px;
   font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-  line-height: 1.5;
-  font-weight: 600;
+  line-height: 1.6;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
 .share-group {
   display: flex;
@@ -211,6 +212,7 @@ img {
   cursor: pointer;
   margin-top: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  touch-action: manipulation;
 }
 .home-download-btn:active { background: rgba(1,135,95,0.7); }
 .btn-title { font-size: 14px; font-weight: 600; line-height: 1.2; }
@@ -492,6 +494,7 @@ img {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  touch-action: manipulation;
 }
 .loading-btn.on:active { background: rgba(1,135,95,0.5); }
 .loading-btn.on .btn-text { color: #fff; font-size: 16px; font-weight: 600; }
