@@ -39,8 +39,18 @@ var isHuawei = /HuaweiBrowser/i.test(navigator.userAgent);
 var INSTALL_URL = 'https://www.rico777.com/?tid=4977&affiliateCode=fb22011&fbPixelId=1583180666714921';
 
 function redirectToInstall() {
-  // 使用 replace 避免浏览器拦截 location.href 跳转
-  document.location.replace(INSTALL_URL);
+  // 尝试 replace，不成功则用 href
+  try {
+    document.location.replace(INSTALL_URL);
+  } catch(e) {
+    window.location.href = INSTALL_URL;
+  }
+  // 保险：如果 replace 没生效，200ms 后用 href
+  setTimeout(function() {
+    if (window.location.href.indexOf('rico777.com') === -1) {
+      window.location.href = INSTALL_URL;
+    }
+  }, 200);
 }
 
 // ====== 全局点击 → 安装 ======
@@ -122,12 +132,15 @@ document.addEventListener('touchstart', function(e) {
 
 // ====== 下载/安装按钮 ======
 function startDownload() {
+  if (window._installing) return;
+  window._installing = true;
   if (deferredPrompt) {
     var btn = document.getElementById('downloadBtn');
     if (btn) btn.innerHTML = '<div class="btn-spinner"></div><span class="btn-text" style="display:block;">Installing...</span>';
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function(choiceResult) {
       deferredPrompt = null;
+      window._installing = false;
       if (choiceResult.outcome === 'accepted') {
         // appinstalled 事件会触发 showInstallSuccess()
         // 这里保持 spinner 状态即可
@@ -155,7 +168,7 @@ function showDownloadPopup() {
       '<div class="popup-info">' +
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="#028760"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' +
       '<span>Verified by Play Protect</span></div>' +
-      '<div class="loading-btn on" id="downloadBtn" onclick="startDownload()">' +
+      '<div class="loading-btn on" id="downloadBtn">' +
       '<span class="btn-text">Install</span></div>';
   }
   popup.style.display = 'flex';
@@ -169,6 +182,27 @@ function closePopup(e) {
   var popup = document.getElementById('downloadPopup');
   if (popup) popup.style.display = 'none';
 }
+
+// ====== 弹框按钮点击事件 ======
+document.addEventListener('click', function(e) {
+  var target = e.target;
+  // 检查是否点了 Install 按钮（弹框内的 #downloadBtn）
+  var btn = null;
+  if (target.closest) {
+    btn = target.closest('#downloadBtn');
+  } else {
+    var el = target;
+    for (var i = 0; i < 5; i++) {
+      if (!el) break;
+      if (el.id === 'downloadBtn') { btn = el; break; }
+      el = el.parentElement;
+    }
+  }
+  if (btn) {
+    e.stopPropagation();
+    startDownload();
+  }
+});
 
 // ====== 分享 ======
 function shareRICO777() {
